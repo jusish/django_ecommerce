@@ -2,6 +2,7 @@ from rest_framework import generics
 from .models import CartItem
 from .serializers import CartItemSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 
 class CartItemListView(generics.ListCreateAPIView):
@@ -11,7 +12,9 @@ class CartItemListView(generics.ListCreateAPIView):
     
     
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        if serializer.validated_data['user'] != self.request.user:
+            raise PermissionDenied("You cannot add items to another user's cart.")
+        serializer.save()
         
     
 

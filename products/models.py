@@ -1,5 +1,7 @@
 from django.db import models
 
+from ecommerce import settings
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -14,6 +16,7 @@ class Product(models.Model):
     stock = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="products")
     
     def __str__(self):
         return self.name
